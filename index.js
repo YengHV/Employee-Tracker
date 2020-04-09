@@ -1,4 +1,4 @@
-const connection = require('./connection.js');
+const connection = require('./db/connection.js');
 const inquirer = require("inquirer");
 
 function start() {
