@@ -15,7 +15,8 @@ function start() {
                     "View Employees",
                     "Add Department",
                     "Add Role",
-                    "Add Employee"
+                    "Add Employee",
+                    "Update Employee Role"
                 ]
             }
         ])
@@ -43,6 +44,10 @@ function start() {
 
                 case "Add Employee":
                     addEmployees();
+                    break;
+
+                case "Update Employee Role":
+                    updateRole();
                     break;
             }
         })
@@ -116,25 +121,6 @@ function addRoles() {
 
 function addEmployees() {
 
-    // inquirer
-    //     .prompt([
-    //         {
-    //             type: "input",
-    //             message: "What is the first name of this employee?",
-    //             name: "first_name"
-    //         },
-    //         {
-    //             type: "input",
-    //             message: "what is the last name of this employee?",
-    //             name: "last_name"
-    //         }
-    //     ])
-    //     .then(function ({first_name}){
-    //         connection.query('INSERT INTO employees SET ?',{names: first_name})
-    //         .then(console.log(first_name + last_name, "Has been added to Employees"))
-    //         .catch(err => console.log(err))
-    //         endProgram();
-
     inquirer
         .prompt([
             {
@@ -197,6 +183,46 @@ function addEmployees() {
             })
 };
 
+function updateRole(){
+
+    let employeeNamesArray = []
+
+  connection.query('SELECT * FROM employees')
+  .then(function(results){
+
+    for(let i = 0; i < results.length; i++){
+      let name = results[i].first_name + ' ' + results[i].last_name;
+      employeeNamesArray.push(name);
+    }
+
+
+    inquirer
+      .prompt([
+        {
+          type: "list",
+          message: "Which employee would you like to update?",
+          name: "employeeName",
+          choices: employeeNamesArray
+        },
+        {
+          type: "input",
+          message: "What is this employee's new Role ID?",
+          name: "newRoleId",
+        }
+      ])
+      .then(function ({ employeeName, newRoleId }) {
+        let employeeUniqueId = employeeNamesArray.indexOf(employeeName) + 1;
+
+        connection.query('UPDATE employees SET ? WHERE employees.id = ?', [{role_id: newRoleId}, employeeUniqueId])
+        .then(console.log(employeeName + " has been update to the Role ID of " + newRoleId))
+        .catch(error => console.log(error))
+        endProgram();
+
+      })
+    })
+    .catch(error => console.log(error))
+};
+
 function endProgram() {
     inquirer
         .prompt([
@@ -219,9 +245,5 @@ function endProgram() {
             }
         })
 }
-
-// getAlldepartments()
-// getAllemployee()
-// getAllroles()
 
 start()

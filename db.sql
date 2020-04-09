@@ -13,8 +13,9 @@ CREATE TABLE roles (
     id INT NOT NULL AUTO_INCREMENT,
     title VARCHAR(30),
     PRIMARY KEY (id)
-    -- salary DECIAML,
-    -- deparment_id INT NOT NULL AUTO_INCREAMENT
+    salary DECIAML (8,2) NOT NULL,
+    deparment_id INT NOT NULL AUTO_INCREAMENT,
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE employees (
